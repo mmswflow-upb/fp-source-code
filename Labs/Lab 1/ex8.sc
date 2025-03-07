@@ -1,17 +1,16 @@
-def improve(xn: Double, a: Double): Double = (xn +  a/xn)/2
+import scala.math._
 
 
-def nth_guess(n: Int, a: Double): Double = {
+def mySqrt(a: Double): Double = {
+  def improve(xn: Double): Double = (xn +  a/xn)/2
+  def acceptable(xn: Double): Boolean = math.abs(xn * xn - a)/a <= 0.001
 
-  def nth_guess_helper(i: Int, xn: Double): Double = {
-    if(i == 0) xn
-    else nth_guess_helper(i-1, improve(xn, a))
+  def tailSqrt(estimate: Double): Double = {
+    if (acceptable(estimate)) estimate
+    else tailSqrt(improve(estimate))
   }
 
-  nth_guess_helper(n, 1.0)
+  tailSqrt(1.0)
 }
 
-nth_guess(10, 2.0)
-
-
-
+mySqrt(3.0)
