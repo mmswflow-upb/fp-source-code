@@ -28,15 +28,15 @@ def tailSumSquared(start:Int, stop: Int) : Int = {
 
   helperSumSquared(start, 0)
 }
+/*
+as you can see, its the same as the previous function but with a slight change in the parameters of the helper function
+(we're passing the square of the iterator)
 
-// as you can see, its the same as the previous function but with a slight change in the parameters of the helper function
-// (we're passing the square of the iterator)
+We can instead have a function that computes the sum of (fx0) + (fx1) + (fx2) + ... + (fxn) for a given function f and interval [a,b]
 
-//We can instead have a function that computes the sum of (fx0) + (fx1) + (fx2) + ... + (fxn) for a given function f and interval [a,b]
-
-// Functions are also considered objects in Scala, so we can pass them as parameters to other functions
-// f: Int => Int is a function that takes an Int and returns an Int
-
+Functions are also considered objects in Scala, so we can pass them as parameters to other functions
+f: Int => Int is a function that takes an Int and returns an Int
+*/
 def sumWithF(f: Int => Int, start: Int, stop: Int): Int =
   def loop(i: Int, crtSum: Int): Int =
     if(i > stop) crtSum
