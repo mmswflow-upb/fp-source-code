@@ -23,10 +23,16 @@ def intersect(l1: Line2D, l2: Line2D)(start: Int, stop: Int): Boolean = {
 
 val linesIntersect = intersect(l1, l2)(0, 10) // should be false (x + 1 != x)
 
-// exercise 11
+ exercise 11
 
 def larger(l1: Line2D, l2: Line2D)(start:Int, stop: Int) : Boolean = {
+  def tailLarger(i: Int): Boolean = {
+    if (i > stop) false
+    else if (l1(i) > l2(i)) true
+    else tailLarger(i + 1)
+  }
 
+  tailLarger(start)
 }
 
-val l1Larger = larger(l1, l2)(0, 10) // should be false (x < x + 1)
+val l1LargerThanL2 = larger(l1, l2)(0, 10) // should be false (x < x + 1)

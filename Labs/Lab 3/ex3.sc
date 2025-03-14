@@ -2,7 +2,7 @@ def foldRight (b: Int)(op: (Int,Int) => Int)(start: Int, stop: Int): Int = {
   def tailFoldRight(crt: Int, acc: Int): Int  = {
     if (crt < start) acc
     else tailFoldRight(crt-1, op(crt, acc)) // performs operations with the 'stop' value as our first crt
-  }
+  }5
   /*
     this isn't the final returned value, because we still
     have the (start, stop) pair of parameters to pass to the foldRight function in order
