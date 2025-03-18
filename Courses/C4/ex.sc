@@ -34,7 +34,7 @@ The addition:
 add: Nat x Nat -> Nat
 add(n, m) = n times Succ applied on m
 
-add(Succ(mp), m) = add(mp, Succ(m))
+add(Succ(mp), m) = add(mp, Succ(m)) -> We keep unfolding the covers of mp until it becomes zero and at the same time we keep applying Succ to m 'mp + 1' times
 
 add(Zero, m) = add(m, Zero) = m
 
