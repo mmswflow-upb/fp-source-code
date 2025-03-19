@@ -124,7 +124,7 @@ def largerThanThree(n: Nat) : Boolean = {
 largerThanThree(Succ(Succ(Succ(Succ(Succ(Zero)))))) // it just finds that pattern even if there's more than 4 succ's, as long as 4 succs are found its greater than 3
 
 /*
-Scala supports pairs
+Scala supports pairs with match
 
 
  */
@@ -150,10 +150,13 @@ trait IList
 case object Void extends IList
 case class Cons(x: Int, xs: IList) extends IList
 
-val l1 = Cons(1, Cons(2, Cons(3, Void)))
+val l1 = Cons(1, Cons(2, Cons(3, Void))) // this is [1 [2 [3 Void]]]
 
-// x and xs are the head and tail of the list, void signifies where to stop or if it's empty
+/*
+x and xs are the head and tail of the list, void signifies where to stop or if it's empty,
+xs actually works more like the pointer to the list of elements that come after x
 
+ */
 def size(l: IList) : Int = {
   l match {
     case Void => 0
