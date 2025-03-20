@@ -27,7 +27,7 @@ def contains(e: Int, l: IList): Boolean = {
 
 val testList = Cons(1, Cons(2, Cons(3, Void))) // [1, 2, 3]
 
-contains(1, testList)
+val listContainsOne = contains(1, testList)
 
 
 def max(l: IList): Int = {
@@ -37,7 +37,7 @@ def max(l: IList): Int = {
   }
 }
 
-max(testList)
+val maxValOfList = max(testList)
 
 /*
 
@@ -57,7 +57,7 @@ def take(n: Int)(l: IList): IList = {
 
 val testList2 = Cons(1, Cons(2, Cons(3, Cons(10, Cons(5,Void)))))
 val takeTestTwo = take(2)
-takeTestTwo(testList2)
+val resultTakeTwo = takeTestTwo(testList2)
 
 /*
 While n is still not zero keep going recursively
@@ -73,21 +73,24 @@ def drop(n: Int)(l: IList): IList = {
 
 val dropTestTwo = drop(2)
 
-dropTestTwo(Void)
-dropTestTwo(Cons(1,Void))
-dropTestTwo(Cons(1, Cons(2,Void)))
+val dropTestOnVoid = dropTestTwo(Void)
+val dropTestOn1ElemList = dropTestTwo(Cons(1,Void))
+val dropTestOn2ElemList = dropTestTwo(Cons(1, Cons(2,Void)))
 
 /*
-Append l2 to l1, so move elements from l2 one by one to l1
+Append l2 to l1, so move elements from l1 one by one to new list
+then add all l2 as the rest of the list so we dont have to add its elements
+one by one anymore
  */
 
-//def append(l1: IList, l2: IList): IList = {
-//  l1 match {
-//    case Void => l2
-//    case Cons(x, xs) =>
-//  }
-//}
+def append(l1: IList, l2: IList): IList = {
+  l1 match {
+    case Void => l2
+    case Cons(x, xs) => Cons(x, append(xs, l2))
+  }
+}
 
+val appendLists = append(testList, testList2)
 
 def last(l: IList): Int = {
   l match {
@@ -97,8 +100,40 @@ def last(l: IList): Int = {
   }
 }
 
-last(testList2)
+val lastElemOfList2 = last(testList2)
 
+/*
+We recursively iterate through the list left to right till we reach the
+end or 'Void', then we return a new list with the last elements put in first
+and we do this by appending the elements we first went through to the list of
+elements that were last
+*/
+
+def reverse(l : IList) : IList = {
+
+  l match {
+    case Void => Void
+    case Cons(x, xs) => append(reverse(xs), Cons(x, Void))
+  }
+}
+
+/*
+Consume 'l' from left to right, and each time we consume an element we add
+it to the accumulator 'accL' as the newest element, so the actual first elements
+are already stored in accL and they're on the right side now, which basically means
+that we reversed the list
+ */
+
+def tailReverse(l : IList ,accL : IList = Void): IList = {
+
+  l match {
+    case Void => accL
+    case Cons(x, xs) =>  tailReverse(xs ,Cons(x, accL))
+  }
+}
+
+val reverseResult = reverse(testList2)
+val tailReverseResult = tailReverse(testList2)
 
 def isSorted(l: IList): Boolean = {
   def isSortedHelper(prev: Int ,remL: IList): Boolean  = {
@@ -111,7 +146,28 @@ def isSorted(l: IList): Boolean = {
 
 }
 
-isSorted(testList2)
+val isList2Sorted = isSorted(testList2)
+
+/*
+ This works as if we're using indices i and j for l1 and l2
+ we consume the lists (increasing the index somehow) and we check for
+ the first number of l1 and first number of l2, if l2[i] is smaller, we consume
+l2 so we add its first element (append it) to the accumulator and we keep l1 the same
+(pass it on exactly the same in the next iteration)
+if l1[j] is bigger then we do the exact same thing but in reverse
+now if  we reach one of the lists end (Void), we just append the other list to the accumulator
+ */
 
 
+def merge(l1: IList, l2: IList, accL: IList = Void): IList = {
 
+
+  (l1, l2) match{
+    case (Void, Void) => accL
+    case (Void, l2) => append(accL, l2)
+    case (l1, Void) => append(accL, l1)
+    case (Cons(x, xs), Cons(y, ys)) => if(x >= y)  merge(l1, ys, append(accL, Cons(y, Void))) else merge(xs, l2, append(accL, Cons(x, Void)))
+  }
+}
+
+val mergeResult = merge(Cons(1,Cons(3,Cons(5,Void))), Cons(0, Cons(2, Cons(4, Void))), Void)
