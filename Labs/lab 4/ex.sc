@@ -60,7 +60,7 @@ val takeTestTwo = take(2)
 val resultTakeTwo = takeTestTwo(testList2)
 
 /*
-While n is still not zero keep going recursively
+While n is still not zero keep going recursively dropping the first elements one by one and return the rest of the list when n reaches zero
  */
 def drop(n: Int)(l: IList): IList = {
 
@@ -171,3 +171,22 @@ def merge(l1: IList, l2: IList, accL: IList = Void): IList = {
 }
 
 val mergeResult = merge(Cons(1,Cons(3,Cons(5,Void))), Cons(0, Cons(2, Cons(4, Void))), Void)
+
+/*
+split array in half recursively, till the array length is 1, then start merging sub arrays with the function defined above,
+because the sub arrays are considered to be sorted
+*/
+
+def mergeSort(l: IList) : IList = {
+
+  val sizeL = size(l)
+
+  l match {
+    case Cons(x, Void) => Cons(x, Void)
+    case Cons(x, ys) => merge(mergeSort(take(sizeL/2)(l)) , mergeSort(drop(sizeL/2)(l))) // split the array in two with drop and take, apply mergeSort on both then merge
+  }
+}
+
+
+
+val sortedList = mergeSort(Cons(10,Cons(2,Cons(-3,Cons(5,Cons(0,Cons(9,Void)))))))
