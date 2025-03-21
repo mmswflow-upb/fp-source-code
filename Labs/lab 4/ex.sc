@@ -90,6 +90,15 @@ def append(l1: IList, l2: IList): IList = {
   }
 }
 
+/*
+l1 = 1 2 3 Void
+l2 = 4 5 6 Void
+
+l1 ->  1 => Cons(1, append(xs, l2))
+->
+ */
+
+
 val appendLists = append(testList, testList2)
 
 def last(l: IList): Int = {
@@ -116,6 +125,12 @@ def reverse(l : IList) : IList = {
     case Cons(x, xs) => append(reverse(xs), Cons(x, Void))
   }
 }
+
+/*
+l = 1 2 3 Void
+
+1 -> append(reverse(2, 3 , Void) ,
+ */
 
 /*
 Consume 'l' from left to right, and each time we consume an element we add
@@ -174,7 +189,8 @@ val mergeResult = merge(Cons(1,Cons(3,Cons(5,Void))), Cons(0, Cons(2, Cons(4, Vo
 
 /*
 split array in half recursively, till the array length is 1, then start merging sub arrays with the function defined above,
-because the sub arrays are considered to be sorted
+so that elements will be placed in the correct order in the new sublist, because the sub arrays are considered to be sorted
+we can make use of the 'merge' function, in order to split the list we need to use the take and drop functions
 */
 
 def mergeSort(l: IList) : IList = {
