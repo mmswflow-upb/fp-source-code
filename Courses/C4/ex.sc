@@ -114,6 +114,19 @@ def add(n: Nat, m: Nat): Nat = {
 
 }
 
+/*
+Keep subtracting from the two numbers at the same time until they both reach zero at the same time, in which case they're equal
+or otherwise (one reaches zero first) and the result is false
+ */
+
+def equals(x: Nat, y: Nat) : Boolean = {
+  (x,y) match {
+    case (Succ(xp), Succ(yp)) => equals(xp, yp)
+    case (Zero, Zero) => true
+    case _ => false
+  }
+}
+
 def largerThanThree(n: Nat) : Boolean = {
   n match {
     case Succ(Succ(Succ(Succ(_)))) => true
