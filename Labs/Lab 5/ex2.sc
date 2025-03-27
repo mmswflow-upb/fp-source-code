@@ -107,3 +107,34 @@ case class Cons(x: Int, xs: OList)  extends OList{
   */
   override def forall(p: Int => Boolean): Boolean = this.foldLeft[Int](1)((acc: Int, head: Int) => if(p(head)) acc else 0) == 1
 }
+
+
+// Testing my implementation
+val l1 = Cons(1, Cons(2, Cons(3, Void))) // [1, 2, 3]
+
+l1.head // should be 1
+l1.tail // should be Cons(2, Cons(3, Void))
+
+val sumOfNums = l1.foldLeft[Int](0){
+  case (acc, head) => acc + head
+} // should return 1 + 2 + 3 = 6
+
+val subtractNums = l1.foldRight[Int](0){
+  case (head, acc) => head - acc
+} // should return 1 - (2 - ( 3 - 0) ) = 2
+
+val indexOf13 = l1.indexOf(13) // -1 it doesnt exist
+val indexOf3 = l1.indexOf(3) // should be 2
+
+val l2 = Cons(10, Cons(20, Cons(30, Cons(40, Cons(50, l1))))) // 10, 20, 30, 40, 50, 1, 2, 3, Void
+
+val filterOutMultiplesOfThree = l2.filter((x: Int) => x % 3 != 0) // 10, 20, 40, 50, 1, 2
+
+val doubleL1 = l1.map( (x: Int) => x * 2) // should return 2, 4, 6
+
+val partitionMultiplesOfThree = l2.partition((x: Int) => x % 3 != 0) // should return (  [30, 3]  , [10, 20, 40, 50, 1, 2])
+
+val slicedArray = l2.slice(2, 4) // should return [30, 40, 50]
+
+val areAllBiggerThan10 = l2.forall((x: Int) => x > 10) // should return false
+val areAllSmallerThan50 = l2.forall((x: Int) => x <= 50) // should return true
