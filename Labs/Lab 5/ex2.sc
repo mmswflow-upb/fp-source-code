@@ -85,6 +85,11 @@ case class Cons(x: Int, xs: OList)  extends OList{
 
   /*
     Returns the list of elements found in the range of indices defined by start and stop
+
+    First we compute the size of the list. Then we apply foldRight to construct the new sliced array in the correct order, we iterate
+    through the list backwards, on each iteration we decrement the current index which started at size -1, in order to check if the current
+  element must be added in the sliced list or not, so we compare the current index with the start and stop to see if it's in the range
+
   */
   override def slice(start: Int, stop: Int): OList = {
 
