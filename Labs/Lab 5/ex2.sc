@@ -1,7 +1,7 @@
 trait OList{
   def head: Int
   def tail: OList
-  def foldRight[B](acc: B)(op: (Int,B) => B): B
+  def foldRight[B](acc: B)(op: (Int,B) => B): B // B is a generic type, it can be any type of value like pairs (Int, Int) or even OList
   def foldLeft[B](acc: B)(op: (B,Int) => B): B
   def indexOf(i: Int): Int
   def filter(p: Int => Boolean): OList
@@ -30,7 +30,7 @@ case class Cons(x: Int, xs: OList)  extends OList{
 
   /*
   Go to the end of the list (while leaving accumulator unchanged), then start doing the operation (op) between the accumulator and current head, then
-  due to recursive calls, the result of that operation will be returned into another operation
+  due to recursive calls, the result of that operation will be returned into another operation,
   so in the end you get:  x1 op (x2 op (x3 op acc) )
   */
 
@@ -70,9 +70,30 @@ case class Cons(x: Int, xs: OList)  extends OList{
    */
   override def map(f: Int => Int): OList = this.foldRight[OList](Void)( (head: Int, accL: OList) => Cons( f(head) ,accL) )
 
-  override def partition(p: Int => Boolean): (OList, OList) = ???
+  /*
+  Just like in filter (again) because we want to reconstruct the lists in the original order, we use foldRight. For this to work we create
+  an accumulator of type (OList, OList), so a pair of lists, the left list has elements that don't satisfy the predicate "p", the right list
+  has the elements that satisfy it. For iteration through the list, we check using the operation whether the current "head" satisfies the predicate,
+  if it does then we create a new list with Cons, and the first element in it will be the head, the rest of the list is the right list, since it had the
+  elements that satisfy the predicate. If the current element "head" doesn't satisfy the predicate, then we construct a new list with its first element being
+  the current element "head" and the rest of the list is what we had before as the left list (elements that don't satisfy the predicate)
+   */
+  override def partition(p: Int => Boolean): (OList, OList) = foldRight[(OList, OList)]((Void, Void)){
+    case (head, (leftL, rightL)) => if(p(head)) (leftL, Cons(head, rightL)) else  (Cons(head, leftL), rightL)
+  }
 
-  override def slice(start: Int, stop: Int): OList = ???
+
+  /*
+    Returns the list of elements found in the range of indices defined by start and stop
+  */
+  override def slice(start: Int, stop: Int): OList = {
+
+    val size = foldLeft[Int](0)((size: Int, _) => size+1)
+
+    foldRight[(OList, Int)]((Void, size-1)){
+      case (head, (resL, currIndx)) => if(currIndx >= start && currIndx <= stop) (Cons(head, resL), currIndx - 1) else (resL, currIndx - 1)
+    }._1
+  }
 
   /*
   Go from left to right through each element, the starting (accumulator) value is 1, if one of the elements satisfies the predicate (p), then
