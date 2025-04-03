@@ -2,7 +2,7 @@ object FSets {
 
   type Set = Int => Boolean
 
-  def tokenID: Int = 559403
+  def tokenID: Int = 1
 
   def member(e: Int)(s: Set): Boolean  = s(e)
 
