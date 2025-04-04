@@ -12,11 +12,22 @@ val email8 = "mario@mail.org".toList
 val email9 = "ben@mail.ro".toList
 val email10 = "ben@notmail.z".toList
 
+
 val emails : List[Email] = List(email1, email2, email3, email4 , email5)
 
 /*
 Slice out the part of the email from start till we find the '@' character
  */
+
+def groupBy[A, B](l: List[A])(criterion: A => B): List[(B, List[A])] =
+  l.foldRight(List.empty[(B, List[A])]) { (elem, acc) =>
+    val key = criterion(elem)
+    val (matches, others) = acc.partition { case (k, _) => k == key }
+    matches match {
+      case Nil => (key, List(elem)) :: others
+      case (k, group) :: _ => (k, elem :: group) :: others
+    }
+  }
 
 def getName(email: Email) : Email =
   email.slice(0, email.indexOf('@'))
@@ -52,14 +63,10 @@ def removeTLD(l: List[Email], tld: Str): List[Email] =
   to the index of the list of emails with the same name in the matrix, so we insert there the newly found email (append)
   */
 def groupEmailsByName(l: List[Email]): List[List[Email]] =
-  l.foldLeft[(List[List[Email]], List[Email])]( (List() : List[List[Email]], List() : List[Email]) ){
-    case ((matrix: List[List[Email]], uniqueEmailNames: List[Email]) , currEmail) => {
-      val currEmailName = getName(currEmail)
-      val indexOfEmailName = uniqueEmailNames.indexOf(currEmailName)
-      if(indexOfEmailName == -1) (matrix :+ List(currEmail),  uniqueEmailNames :+ currEmailName ) // First time seeing this email name
-      else (matrix.updated(indexOfEmailName, matrix(indexOfEmailName) :+ currEmail) , uniqueEmailNames)// Not first time seeing this email name, this time it's a different domain, add the current email to list of emails
-    }
-}._1
+  groupBy[Email,Email](l)( (email: Email) => getName(email) ).map{
+    case (key, listOfEmails) => listOfEmails
+  }
+
 
 /*
   If there's no duplicates, forAll will return true but our function returns false, but when we actually have at least

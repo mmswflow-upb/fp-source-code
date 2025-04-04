@@ -7,7 +7,7 @@ Go through all elements, add 1 to each and reconstruct the grade book
 
 def increment(g: Gradebook): Gradebook =
   g.map{
-    case (name, grade) => (name, grade+1)
+    case (name, grade) => if(grade >= 5) (name, grade+1) else (name,grade)
   }
 
 /*
@@ -23,10 +23,10 @@ def average(g: Gradebook): Double =
   then take the sizes of the lists and divide by total number of entries to find failing/passing rate
   */
 def percentage(g: Gradebook): (Double,Double) =
+
+  if(g.size == 0) (0,0)
   val pair = g.partition((name, grade) => grade < 5)
-  if(pair._1.size == 0)  (0, 1.0)
-  else if(pair._2.size == 0)  (1.0, 0.0)
-  else (pair._1.size.toDouble/g.size.toDouble, pair._2.size.toDouble/g.size.toDouble)
+  (pair._1.size.toDouble/g.size.toDouble, pair._2.size.toDouble/g.size.toDouble)
 
 /*
 
@@ -64,7 +64,19 @@ def atLeastOneFail(g: ExtGradebook): List[Name] =
     case ( (name, lecture, grade), failingStudents) => if(grade < 5 && failingStudents.indexOf(name) == -1) name :: failingStudents else failingStudents
   }
 
-def groupBy[A,B](l: List[A])(criterion: A => B): List[(B,List[A])] = ???
+/*
+  
+  */
+
+def groupBy[A, B](l: List[A])(criterion: A => B): List[(B, List[A])] =
+  l.foldRight(List.empty[(B, List[A])]) { (elem, acc) =>
+    val key = criterion(elem)
+    val (matches, others) = acc.partition { case (k, _) => k == key }
+    matches match {
+      case Nil => (key, List(elem)) :: others
+      case (k, group) :: _ => (k, elem :: group) :: others
+    }
+  }
 
 increment(gradebook)
 average(gradebook)
@@ -73,3 +85,7 @@ pass(gradebook)
 honorsList(gradebook)
 
 atLeastOneFail(extgradebook)
+
+
+groupBy[String, Int](List("Mario", "Ana", "Abd", "Omar", "Azzam"))(_.length)
+groupBy[(Int, Int), Int](List((1,2), (2,1), (3,3))) (p => p._1 + p._2)
