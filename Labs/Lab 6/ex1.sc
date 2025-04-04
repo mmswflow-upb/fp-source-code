@@ -1,5 +1,5 @@
 type Gradebook = List[(String,Int)] //the type Gradebook now refers to a list of pairs of String and Int
-val gradebook = List(("G",3), ("F", 10), ("M",6), ("P",4))
+val gradebook = List(("G",3), ("F", 10), ("M",11), ("P",4))
 
 /*
 Go through all elements, add 1 to each and reconstruct the grade book
@@ -16,7 +16,7 @@ def increment(g: Gradebook): Gradebook =
 def average(g: Gradebook): Double =
   g.foldRight[Int](0){
     case ( (name, grade), accGrade ) => accGrade + grade
-  }/g.size
+  }.toDouble/g.size
 
 /*
   partition entries into ones that passed (right side) and ones that failed (left side)
@@ -24,7 +24,9 @@ def average(g: Gradebook): Double =
   */
 def percentage(g: Gradebook): (Double,Double) =
   val pair = g.partition((name, grade) => grade < 5)
-  (pair._1.size/g.size, pair._2.size/g.size)
+  if(pair._1.size == 0)  (0, 1.0)
+  else if(pair._2.size == 0)  (1.0, 0.0)
+  else (pair._1.size.toDouble/g.size.toDouble, pair._2.size.toDouble/g.size.toDouble)
 
 /*
 
@@ -54,7 +56,7 @@ def honorsList(g: Gradebook): List[String] =
 type Name = String
 type Lecture = String
 type ExtGradebook = List[(Name,Lecture,Int)]
-val egradebook: ExtGradebook = List(("John","FP",4))
+val extgradebook: ExtGradebook = List(("John","FP",4), ("Mario", "SM", 5), ("Mario", "FP", 4), ("Mario", "Physics", 2), ("Ben", "Calculus", 4), ("Ben", "Calculus II", 5), ("Ben", "Numerical Methods", 3), ("Abd", "Calculus", 5))
 
 
 def atLeastOneFail(g: ExtGradebook): List[Name] =
@@ -64,5 +66,10 @@ def atLeastOneFail(g: ExtGradebook): List[Name] =
 
 def groupBy[A,B](l: List[A])(criterion: A => B): List[(B,List[A])] = ???
 
+increment(gradebook)
+average(gradebook)
+percentage(gradebook)
+pass(gradebook)
+honorsList(gradebook)
 
-
+atLeastOneFail(extgradebook)
