@@ -65,7 +65,7 @@ def atLeastOneFail(g: ExtGradebook): List[Name] =
   }
 
 /*
-  
+  We compute the key for each element based on the criterion
   */
 
 def groupBy[A, B](l: List[A])(criterion: A => B): List[(B, List[A])] =
