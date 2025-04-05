@@ -2,7 +2,7 @@ type Gradebook = List[(String,Int)] //the type Gradebook now refers to a list of
 val gradebook = List(("G",3), ("F", 10), ("M",11), ("P",4))
 
 /*
-Go through all elements, add 1 to each and reconstruct the grade book
+Go through all elements, add 1 to each and reconstruct the grade book if the grade is 5 or higher
  */
 
 def increment(g: Gradebook): Gradebook =
@@ -29,7 +29,7 @@ def percentage(g: Gradebook): (Double,Double) =
   (pair._1.size.toDouble/g.size.toDouble, pair._2.size.toDouble/g.size.toDouble)
 
 /*
-
+  Filter out the students who failed, and keep only the names of the students who passed
   */
 def pass(g: Gradebook): List[String] =
   g.filter{
@@ -38,7 +38,12 @@ def pass(g: Gradebook): List[String] =
     case (name, grade) => name
   }
 
-
+/*
+  same as above, but this time we also sort them using sortWith, it takes a comparison function if it returns true then the first entry comes before the other one, and vice versa
+  so if we compare g1 to g2, and g1 is bigger than g2 then compareTo returns a value bigger than 0 which then returns true to the sortWith function, meaning that the first
+  element comes before the second one and vice versa. also when compareTo returns zero it means they're equal so we don't change their order,
+  first can come before second or the opposite it doesn't matter they're the same
+  */
 def honorsList(g: Gradebook): List[String] =
   g.filter{
     case (name, grade) => grade >= 5
@@ -59,13 +64,26 @@ type ExtGradebook = List[(Name,Lecture,Int)]
 val extgradebook: ExtGradebook = List(("John","FP",4), ("Mario", "SM", 5), ("Mario", "FP", 4), ("Mario", "Physics", 2), ("Ben", "Calculus", 4), ("Ben", "Calculus II", 5), ("Ben", "Numerical Methods", 3), ("Abd", "Calculus", 5))
 
 
+/*
+use foldRight to accumulate the list of students who have failed at least once. If any of the names wasn't saved already in the accumulated list then
+append the current list to the new element (put the new element as its head) to construct a new list, if it's already in the list we don't change it.
+ */
+
 def atLeastOneFail(g: ExtGradebook): List[Name] =
   g.foldRight[List[Name]](List() : List[Name]){
     case ( (name, lecture, grade), failingStudents) => if(grade < 5 && failingStudents.indexOf(name) == -1) name :: failingStudents else failingStudents
   }
 
 /*
-  We compute the key for each element based on the criterion
+  We iterate through the list with foldRight, we compute the key for each element based on the criterion.
+  The data type of the keys is B and data type of the elements stored in the lists is A.
+  Then we partition the current accumulator (the map) into 2 parts, one that has the same key as the element we've currently reached,
+  and the others that have different keys. If the currently computed key isn't in the map already, we add a new pair of (key,value),
+  where value is a list containing for now the current element. If the key is already saved in the map,
+  then we reconstruct the whole map, by inserting a new (key,value) pair as its head and the other entries that
+  have different keys are making up the rest of the map. This new (key,value) pair will have a new value actually, the key stays the same.
+  The new value consists of a new list with the current element as the new head of this list, and the other elements that had the same
+  key as the current element will make up the rest of the list
   */
 
 def groupBy[A, B](l: List[A])(criterion: A => B): List[(B, List[A])] =

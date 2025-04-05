@@ -58,9 +58,7 @@ def removeTLD(l: List[Email], tld: Str): List[Email] =
   l.filter((email: Email) => !getTLD(email).equals(tld))
 
 /*
-  Goes through list, if an email's name is not already in the recorded "right" list then a new list is created in the matrix
-  and the new email is added there, else if the name was previously read, the index of the email's name in the right list corresponds
-  to the index of the list of emails with the same name in the matrix, so we insert there the newly found email (append)
+  uses groupBy function to group emails by their name, the function that "computes" the key here is the getName function
   */
 def groupEmailsByName(l: List[Email]): List[List[Email]] =
   groupBy[Email,Email](l)( (email: Email) => getName(email) ).map{
