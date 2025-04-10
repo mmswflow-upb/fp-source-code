@@ -92,3 +92,13 @@ List(1,2,3).map(_+2) // returns a list of the same elements but with 2 added to 
 List(1,2,3).filter(_%2==0) // returns divisors of 2 only from the list 1,2,3
 
 List(1,2,3).zip(List(5,6,7)) // if theres more elements on one side, it will ignore
+
+/*
+Implementation of map
+
+
+ */
+
+
+def map[A,B](f: A=> B)(l: List[A]): List[B] = l.foldRight(Nil: List[B])( (x, acc) => f(x) :: acc )
+
