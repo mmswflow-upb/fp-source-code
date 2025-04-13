@@ -4,7 +4,8 @@ val m1 = List(List(1,1,1), List(1,1,1), List(1,1,1))
 val m2 = List(List(1,0,0), List(0,1,0), List(0,0,1))
 val m3 = List(List(1,2,3), List(4,5,6), List(7,8,9), List(10,11,12))
 val m4 = List(List(1,2,3), List(4,5,6), List(7,8,9))
-
+val m5 = List(List(1,2,3,4), List(5,6,7,8), List(9,10,11,12))
+val m6 = List(List(1,2,3), List(4,5,6), List(7,8,9), List(10,11,12))
 def sum(m: Matrix): Int = m.foldRight[Int](0)((row: List[Int], accSum: Int) => accSum + row.sum)
 
 def scalarMult(const: Int, m: Matrix): Matrix =
@@ -80,3 +81,8 @@ def mult(m1: Matrix, m2: Matrix): Matrix = {
 
 
 printMatrix(mult(m1,m4))
+
+printMatrix(transpose(m5))
+printMatrix(transpose(m6))
+
+printMatrix(mult(m5,m6))
