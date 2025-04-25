@@ -105,16 +105,7 @@ def invert(img: Img): Img = img.map(_.map(255 - _))
 show(invert(j))
 
 def cropAt(img: Img, xSt:Int, ySt:Int, xEnd: Int, yEnd: Int): Img = {
-  val croppedImg = for {
-    (row, rowIndx) <- img.zipWithIndex
-    if rowIndx >= ySt && rowIndx <= yEnd
-  } yield {
-    for {
-      (elem, colIndx) <- row.zipWithIndex
-      if colIndx >= xSt && colIndx <= xEnd
-    } yield elem
-  }
-  croppedImg
+  img.slice(ySt,yEnd+1).map(_.slice(xSt,xEnd+1))
 }
 
 val imgToBeCropped = List(List(0,0,1,0,0), List(0,1,0,1,0), List(0,1,1,1,0), List(1,0,0,0,1), List(1,0,0,0,1))
