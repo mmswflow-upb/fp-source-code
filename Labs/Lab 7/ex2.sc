@@ -7,19 +7,11 @@ type Img = List[List[Int]]
 def show(m: Img): String = {
 
 
-  def turnRowIntoString(l: List[Int]) : String = {
-    l.foldRight[String](""){ // use fold right to keep the order of the numbers the same in the row
-      case (num, accRowStr) => accRowStr match {
-        case "" => num.toString // started inserting nums into the string
-        case _ => num.toString + "," + accRowStr // put commas between numbers only
-      }
-    }
-  }
 
   def helperShow(m: Img): String = {
     m.foldRight[String](""){ // use fold right to keep the order of the rows the same
       case ( row,str) => {
-        val rowStr = '\n' + turnRowIntoString(row) // for each new row we must add a new line character and turn that row into a string
+        val rowStr = '\n' + row.mkString(" ") // for each new row we must add a new line character and turn that row into a string
         rowStr + str // concatenate the new row with the rest of the matrix
       }
     }
@@ -97,9 +89,10 @@ val j = List(
   List(1,1,1,0,0)
 )
 
+
 show(hFlip(j))
 
-def rot90Right(img: Img): Img = vFlip(transpose(img))
+def rot90Right(img: Img): Img = (transpose(img))
 
 show(rot90Right(j))
 

@@ -22,6 +22,7 @@ def add(m1: Matrix, m2: Matrix): Matrix = {
 }
 
 
+
 def singleLine(m: Matrix): List[Int] = {
   m.foldRight[List[Int]](Nil: List[Int])( (row: List[Int], col: List[Int]) => row.head :: col)
 }
