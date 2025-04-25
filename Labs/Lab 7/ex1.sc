@@ -9,9 +9,7 @@ val m6 = List(List(1,2,3), List(4,5,6), List(7,8,9), List(10,11,12))
 def sum(m: Matrix): Int = m.foldRight[Int](0)((row: List[Int], accSum: Int) => accSum + row.sum)
 
 def scalarMult(const: Int, m: Matrix): Matrix =
-  m.foldRight[Matrix](Nil: Matrix)( (row: List[Int], accM : Matrix) =>
-    row.map( (cell: Int) => cell * const) :: accM
-  )
+  m.map(_.map((x: Int) => x * const))
 
 def add(m1: Matrix, m2: Matrix): Matrix = {
 
@@ -59,24 +57,15 @@ printMatrix(remCol(m2))
 printMatrix(m3)
 printMatrix(transpose(m3))
 
+
 def mult(m1: Matrix, m2: Matrix): Matrix = {
   val transM2 = transpose(m2)
 
-  def computeCell(row1: List[Int], row2: List[Int]): Int ={
-    row1.zip(row2).foldRight[List[Int]](Nil: List[Int]){
-      case ((num1, num2), accL) => num1 * num2 :: accL
-    }.sum
-  }
-
-  m1.foldRight[Matrix](Nil: Matrix){
-    case (row1, accM) => {
-     transM2.foldRight[List[Int]](Nil: List[Int]){
-       case(row2, accL) => computeCell(row1,row2) :: accL
-     }
-    } :: accM
-  }
-
-
+  m1.map((row1: List[Int]) => {
+    transM2.map((row2: List[Int]) => {
+      row1.zip(row2).map((pair: (Int, Int)) => pair._1 * pair._2).sum
+    })
+  })
 }
 
 
