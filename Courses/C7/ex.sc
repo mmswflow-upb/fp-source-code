@@ -69,7 +69,23 @@ class Matrix(val inner: Tabular[Int]) {
                    yield p._1 * p._2).foldRight(0)(_+_)
   */
 
-  override def toString = ???
+  override def toString : String = {
+
+
+    /*
+    Turn each number into a string, map them back into their rows, now you have lists of strings
+    or rows of strings, now you have to bind the list of strings into one string per line.
+     */
+
+    def bind(row: List[String]): String = {
+      row.foldRight("")(_+ " " + _)
+    }
+
+    inner.map(_.map(_.toString))
+      .map(bind)
+      .foldRight("")(_+ "\n" + _)
+  }
+
 
 
 }
@@ -193,6 +209,5 @@ object Matrix {
   def apply(t: Tabular[Int]): Matrix = new Matrix(t)
 }
 
-Matrix("1,2\n 3,4")
-Matrix(List(List(1,2), List(3,4)))
+(Matrix("1,2\n3,4") + Matrix(List(List(1,2), List(3,4))))
 
